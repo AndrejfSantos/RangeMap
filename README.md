@@ -20,7 +20,7 @@ import "github.com/AndrejfSantos/RangeMap/rangemap"
 
 func main()  {
 
-	rangeMap := RangeMap[string]{}
+	rangeMap := rangemap.RangeMap[string]{}
 	rangeMap.Put(0, 9, "Ones")
 	rangeMap.Put(10, 99, "Tens")
 	rangeMap.Put(100, 999, "Hundreds")
