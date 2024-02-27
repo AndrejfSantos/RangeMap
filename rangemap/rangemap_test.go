@@ -32,7 +32,7 @@ func TestRangeMapGet_found(t *testing.T) {
 func helper_TestRangeMapGet_found(t *testing.T, rangeMap RangeMap[string], key int, wanted string) {
 	got, found := rangeMap.Get(key)
 	if !found {
-		t.Errorf("Get() found not true on %d", key)
+		t.Errorf("Get() found was not true on %d", key)
 	}
 	if got == nil {
 		t.Errorf("Get() got = nil, want %s", wanted)
@@ -55,7 +55,7 @@ func TestRangeMapGet_not_found(t *testing.T) {
 func helper_TestRangeMapGet_not_found(t *testing.T, rangeMap RangeMap[string], key int) {
 	got, found := rangeMap.Get(key)
 	if found {
-		t.Errorf("Get() found true on %d", key)
+		t.Errorf("Get() found was true on %d", key)
 	}
 	if got != nil {
 		t.Errorf("Get() got = %s, want nil", *got)
@@ -63,13 +63,67 @@ func helper_TestRangeMapGet_not_found(t *testing.T, rangeMap RangeMap[string], k
 }
 
 func TestRangeMapGet_empty(t *testing.T) {
+	rangeMap := RangeMap[string]{}
+	helper_TestRangeMapGet_not_found(t, rangeMap, 0)
+}
+
+// TestRangeMapGet_flow - A more complete integration test that tests gets and puts together
+func TestRangeMapGet_flow(t *testing.T) {
 
 	rangeMap := RangeMap[string]{}
-	got, found := rangeMap.Get(0)
-	if found {
-		t.Error("Get() found true on empty Map")
+	helper_TestRangeMapGet_not_found(t, rangeMap, -50)
+	helper_TestRangeMapGet_not_found(t, rangeMap, -1)
+	helper_TestRangeMapGet_not_found(t, rangeMap, 2)
+	helper_TestRangeMapGet_not_found(t, rangeMap, 5)
+	helper_TestRangeMapGet_not_found(t, rangeMap, 18)
+
+	rangeMap.Put(2, 5, "small")
+	helper_TestRangeMapGet_not_found(t, rangeMap, -50)
+
+	for i := -1; i <= 1; i++ {
+		helper_TestRangeMapGet_not_found(t, rangeMap, i)
 	}
-	if got != nil {
-		t.Errorf("Get() got = %s on empty Map, want nil", *got)
+
+	for i := 2; i <= 5; i++ {
+		helper_TestRangeMapGet_found(t, rangeMap, i, "small")
 	}
+
+	helper_TestRangeMapGet_not_found(t, rangeMap, 18)
+
+	rangeMap.Put(-60, -40, "negatives")
+	helper_TestRangeMapGet_not_found(t, rangeMap, -61)
+	helper_TestRangeMapGet_found(t, rangeMap, -60, "negatives")
+	helper_TestRangeMapGet_found(t, rangeMap, -50, "negatives")
+	helper_TestRangeMapGet_found(t, rangeMap, -40, "negatives")
+	helper_TestRangeMapGet_not_found(t, rangeMap, -39)
+
+	for i := -1; i <= 1; i++ {
+		helper_TestRangeMapGet_not_found(t, rangeMap, i)
+	}
+
+	for i := 2; i <= 5; i++ {
+		helper_TestRangeMapGet_found(t, rangeMap, i, "small")
+	}
+
+	helper_TestRangeMapGet_not_found(t, rangeMap, 18)
+
+	rangeMap.Put(18, 18, "18")
+	helper_TestRangeMapGet_not_found(t, rangeMap, -61)
+	helper_TestRangeMapGet_found(t, rangeMap, -60, "negatives")
+	helper_TestRangeMapGet_found(t, rangeMap, -50, "negatives")
+	helper_TestRangeMapGet_found(t, rangeMap, -40, "negatives")
+	helper_TestRangeMapGet_not_found(t, rangeMap, -39)
+
+	for i := -1; i <= 1; i++ {
+		helper_TestRangeMapGet_not_found(t, rangeMap, i)
+	}
+
+	for i := 2; i <= 5; i++ {
+		helper_TestRangeMapGet_found(t, rangeMap, i, "small")
+	}
+
+	helper_TestRangeMapGet_not_found(t, rangeMap, 17)
+	helper_TestRangeMapGet_found(t, rangeMap, 18, "18")
+	helper_TestRangeMapGet_not_found(t, rangeMap, 19)
+
 }
