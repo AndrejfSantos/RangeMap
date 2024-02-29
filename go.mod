@@ -1,3 +1,3 @@
-module github.com/AndrejfSantos/RangeMap
+module github.com/AndrejfSantos/rangemap
 
 go 1.20
