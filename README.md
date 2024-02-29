@@ -16,7 +16,7 @@ Code example:
 ````go
 package main
 
-import "github.com/AndrejfSantos/RangeMap/rangemap"
+import "github.com/AndrejfSantos/rangemap"
 
 func main()  {
 
