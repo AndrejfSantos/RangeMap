@@ -5,6 +5,33 @@ go test -v - cover
 */
 import "testing"
 
+// Covers GetOrDefault for when key is found
+func TestRangeMapGetOrDefault_found(t *testing.T) {
+	wanted := "Ones"
+	rangeMap := RangeMap[string]{}
+	rangeMap.Put(0, 9, wanted)
+	got := rangeMap.GetOrDefault(1, "Default")
+
+	if got == "Default" {
+		t.Errorf("Get() got = Default, want %s", wanted)
+	}
+	if got != wanted {
+		t.Errorf("Get() got = %s, want %s", got, wanted)
+	}
+}
+
+// Covers GetOrDefault for when key is not found and default is returned
+func TestRangeMapGetOrDefault_not_found(t *testing.T) {
+	wanted := "Default"
+	rangeMap := RangeMap[string]{}
+	got := rangeMap.GetOrDefault(1, wanted)
+
+	if got != wanted {
+		t.Errorf("Get() got = %s, want %s", got, wanted)
+	}
+}
+
+// covers a Get on keys that are found
 func TestRangeMapGet_found(t *testing.T) {
 
 	rangeMap := RangeMap[string]{}
@@ -29,18 +56,8 @@ func TestRangeMapGet_found(t *testing.T) {
 	helper_TestRangeMapGet_found(t, rangeMap, 1337, "Thousands")
 	helper_TestRangeMapGet_found(t, rangeMap, 9999, "Thousands")
 }
-func helper_TestRangeMapGet_found(t *testing.T, rangeMap RangeMap[string], key int, wanted string) {
-	got, found := rangeMap.Get(key)
-	if !found {
-		t.Errorf("Get() found was not true on %d", key)
-	}
-	if got == nil {
-		t.Errorf("Get() got = nil, want %s", wanted)
-	} else if *got != wanted {
-		t.Errorf("Get() got = %s, want %s", *got, wanted)
-	}
-}
 
+// covers a Get on keys that are not found
 func TestRangeMapGet_not_found(t *testing.T) {
 
 	rangeMap := RangeMap[string]{}
@@ -52,16 +69,8 @@ func TestRangeMapGet_not_found(t *testing.T) {
 	helper_TestRangeMapGet_not_found(t, rangeMap, 999)
 	helper_TestRangeMapGet_not_found(t, rangeMap, 10000)
 }
-func helper_TestRangeMapGet_not_found(t *testing.T, rangeMap RangeMap[string], key int) {
-	got, found := rangeMap.Get(key)
-	if found {
-		t.Errorf("Get() found was true on %d", key)
-	}
-	if got != nil {
-		t.Errorf("Get() got = %s, want nil", *got)
-	}
-}
 
+// covers a Get on an empty map
 func TestRangeMapGet_empty(t *testing.T) {
 	rangeMap := RangeMap[string]{}
 	helper_TestRangeMapGet_not_found(t, rangeMap, 0)
@@ -126,4 +135,30 @@ func TestRangeMapGet_flow(t *testing.T) {
 	helper_TestRangeMapGet_found(t, rangeMap, 18, "18")
 	helper_TestRangeMapGet_not_found(t, rangeMap, 19)
 
+}
+
+// Helper function for when the key should be found
+func helper_TestRangeMapGet_found(t *testing.T, rangeMap RangeMap[string], key int, wanted string) {
+	t.Helper()
+	got, found := rangeMap.Get(key)
+	if !found {
+		t.Errorf("Get() found was not true on %d", key)
+	}
+	if got == nil {
+		t.Errorf("Get() got = nil, want %s", wanted)
+	} else if *got != wanted {
+		t.Errorf("Get() got = %s, want %s", *got, wanted)
+	}
+}
+
+// Helper function for when the key should not be found
+func helper_TestRangeMapGet_not_found(t *testing.T, rangeMap RangeMap[string], key int) {
+	t.Helper()
+	got, found := rangeMap.Get(key)
+	if found {
+		t.Errorf("Get() found was true on %d", key)
+	}
+	if got != nil {
+		t.Errorf("Get() got = %s, want nil", *got)
+	}
 }

@@ -47,6 +47,15 @@ func (m *RangeMap[T]) Get(key int) (value *T, ok bool) {
 	return nil, false
 }
 
+// GetOrDefault - returns the value for a key. If the key does not exist, returns the default value instead.
+func (m *RangeMap[T]) GetOrDefault(key int, defaultValue T) T {
+	value, found := m.Get(key)
+	if found {
+		return *value
+	}
+	return defaultValue
+}
+
 // Put - stores the value for a key that will be within the range of from and to
 func (m *RangeMap[T]) Put(from int, to int, value T) {
 	m.input = append(m.input, valueIntRange[T]{intRange{from, to}, value})

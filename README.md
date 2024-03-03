@@ -32,5 +32,7 @@ func main()  {
     value, found = rangeMap.Get(666)  // returns "Hundreds" , true
     value, found = rangeMap.Get(1337) // returns "Thousands" , true
 
+    value = rangeMap.GetOrDefault(-1, "Default") // returns "Default"
+
 }
 ````

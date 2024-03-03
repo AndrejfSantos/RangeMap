@@ -8,9 +8,9 @@ goos: darwin
 goarch: amd64
 pkg: rangemap/rangemap
 cpu: Intel(R) Core(TM) i5-5257U CPU @ 2.70GHz
-BenchmarkSingleKeyMap-4         128684619                9.232 ns/op
-BenchmarkUnitsMap-4             79455692                14.98 ns/op
-BenchmarkBigMap-4               25379938                45.03 ns/op
+BenchmarkSingleKeyMap_Get-4         128684619                9.232 ns/op
+BenchmarkUnitsMap_Get-4             79455692                14.98 ns/op
+BenchmarkBigMap_Get-4               25379938                45.03 ns/op
 
 Using the single key map as a base line,
 4 keys on the map take 50% more time then a single Key,
@@ -19,8 +19,8 @@ Using the single key map as a base line,
 */
 import "testing"
 
-// BenchmarkSingleKeyMap - This map has a single key on it
-func BenchmarkSingleKeyMap(b *testing.B) {
+// BenchmarkSingleKeyMap_Get - This benchmarks Get on a map with a single key on it
+func BenchmarkSingleKeyMap_Get(b *testing.B) {
 	rangeMap := RangeMap[string]{}
 	rangeMap.Put(0, 9, "Ones")
 
@@ -29,8 +29,8 @@ func BenchmarkSingleKeyMap(b *testing.B) {
 	}
 }
 
-// BenchmarkUnitsMap - This map has the 4 keys used on the unit tests
-func BenchmarkUnitsMap(b *testing.B) {
+// BenchmarkUnitsMap_Get - This benchmarks Get on a map with the 4 keys used on the unit tests
+func BenchmarkUnitsMap_Get(b *testing.B) {
 	rangeMap := RangeMap[string]{}
 	rangeMap.Put(0, 9, "Ones")
 	rangeMap.Put(10, 99, "Tens")
@@ -42,8 +42,8 @@ func BenchmarkUnitsMap(b *testing.B) {
 	}
 }
 
-// BenchmarkBigMap - This has 9001 keys and is used to test scale
-func BenchmarkBigMap(b *testing.B) {
+// BenchmarkBigMap_Get - This benchmarks Get on a map with 9001 keys and is used to test scale
+func BenchmarkBigMap_Get(b *testing.B) {
 	rangeMap := RangeMap[string]{}
 
 	for i := 0; i < 9000*3+1; i += 3 {
